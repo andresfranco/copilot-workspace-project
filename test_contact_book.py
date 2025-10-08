@@ -1,5 +1,5 @@
 import pytest
-from contact_book import contacts, add_contact, view_contact, delete_contact
+from contact_book import contacts, add_contact, view_contact, delete_contact, list_all_contacts
 
 @pytest.fixture(autouse=True)
 def reset_contacts():
@@ -28,7 +28,17 @@ def test_delete_contact_found(capsys):
     assert "Contact 'David' deleted." in captured.out
     assert "David" not in contacts
 
+
 def test_delete_contact_not_found(capsys):
     delete_contact("Eve")
     captured = capsys.readouterr()
     assert "Contact 'Eve' not found." in captured.out
+
+def test_list_all_contacts_empty():
+    assert list_all_contacts() == []
+
+def test_list_all_contacts_with_contacts():
+    add_contact("Alice", "123-456-7890")
+    add_contact("Bob", "987-654-3210")
+    names = list_all_contacts()
+    assert set(names) == {"Alice", "Bob"}
