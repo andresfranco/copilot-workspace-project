@@ -1,5 +1,6 @@
 import pytest
 from contact_book import contacts, add_contact, view_contact, delete_contact, list_all_contacts
+from contact_book import update_contact
 
 @pytest.fixture(autouse=True)
 def reset_contacts():
@@ -42,3 +43,14 @@ def test_list_all_contacts_with_contacts():
     add_contact("Bob", "987-654-3210")
     names = list_all_contacts()
     assert set(names) == {"Alice", "Bob"}
+
+def test_update_contact_found():
+    add_contact("Alice", "123-456-7890")
+    result = update_contact(contacts, "Alice", "111-222-3333")
+    assert result["Alice"] == "111-222-3333"
+    assert contacts["Alice"] == "111-222-3333"
+
+def test_update_contact_not_found():
+    add_contact("Bob", "987-654-3210")
+    result = update_contact(contacts, "Charlie", "444-555-6666")
+    assert result == "Contact not found."
